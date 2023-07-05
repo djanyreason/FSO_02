@@ -1,0 +1,1 @@
+Folder for the Course Information project
