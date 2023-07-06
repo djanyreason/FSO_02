@@ -9,6 +9,8 @@ const Course = ( {course} ) => {
           </p>
         )
       }
+      <h4>total of {course.parts.reduce((total, value) => 
+                    total + value.exercises, 0)} exercises</h4>
     </div>
   );
 };
