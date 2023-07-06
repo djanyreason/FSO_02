@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
-  ]); 
+  const [persons, setPersons] = useState([  ]); 
   const [newName, setNewName] = useState('');
 
-  const handleNameEntry = (event) => {setNewName(event.target.value);}
+  //generic text entry field update function - takes the update state function
+  //as a parameter and returns an event handler function
+  const handleFieldEntry = (updateField) => 
+    (event) => {updateField(event.target.value);};
 
   //Function that adds an entry to phonebook 
   //while maintaining alphabetical sort of names
@@ -60,7 +61,7 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={handleAddClick}>
         <div>
-          name: <input value={newName} onChange={handleNameEntry}/>
+          name: <input value={newName} onChange={handleFieldEntry(setNewName)}/>
         </div>
         <div>
           <button type="submit">add</button>
