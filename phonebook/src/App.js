@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Entry from './components/Entry';
 
 const App = () => {
   const [persons, setPersons] = useState([  ]); 
@@ -68,7 +69,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-        {persons.map(person => <div key={person.name}>{person.name}</div>)}
+        {persons.map(person => <Entry key={person.name} person={person} />)}
     </div>
   );
 };
