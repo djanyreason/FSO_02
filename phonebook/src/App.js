@@ -10,8 +10,12 @@ const App = () => {
 
   const handleAddClick = (event) => {
     event.preventDefault();
-    setPersons(persons.concat({ name: newName }));
-    setNewName('');
+    if(persons.reduce((check, person) => (check || (person.name === newName)), false)) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      setPersons(persons.concat({ name: newName }));
+      setNewName('');
+    }
   }
 
   return (
