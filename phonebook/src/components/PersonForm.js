@@ -16,8 +16,6 @@ const PersonForm = ( { tryAddPerson }) => {
     if(tryAddPerson(newName, newNumber)) {
       setNewName('');
       setNewNumber('');
-    } else {
-      alert(`${newName} is already added to phonebook`);
     }
   };
 

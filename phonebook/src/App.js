@@ -19,11 +19,27 @@ const App = () => {
   }
 
   const tryAddPerson = (newName, newNumber) => {
-    if(persons.reduce((check, person) => 
-                      (check || (person.name.toLowerCase() 
-                                 === newName.toLowerCase())), false))
+    const checkSameName = persons.reduce(
+        (check, person) => (
+          person.name.toLowerCase() === newName.toLowerCase() ?
+          check.concat(person) : check
+        ),
+    []);
+    
+    if(checkSameName.length > 0)
     {
-      return false;
+      if(window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+        )) {
+          phonebookService
+            .update(checkSameName[0].id, {name: newName, number: newNumber})
+            .then(response => setPersons(persons.map(
+              person => person.id === response.id ? response : person
+            )));
+          return true;
+        } else {
+          return false;
+        }
     } else {
       phonebookService
         .create({name: newName, number: newNumber})
