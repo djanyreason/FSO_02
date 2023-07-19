@@ -13,14 +13,14 @@ const create = (newObject) => {
     .then(response => response.data);
 };
 
-const update = (id, newObject) => {
+const remove = (id) => {
   return axios
-    .put(`${baseUrl}/${id}`, newObject)
-    .then(response => response.data);
+    .delete(`${baseUrl}/${id}`)
+    .then(response => response);
 };
 
 export default { 
   getAll, 
   create, 
-  update 
+  remove
 };

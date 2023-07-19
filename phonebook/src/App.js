@@ -28,11 +28,17 @@ const App = () => {
       phonebookService
         .create({name: newName, number: newNumber})
         .then(response => setPersons(persons.concat(response)));
-      console.log('Hello!');
-      console.log(persons);
       return true;
     }
   };
+
+  const removePerson = (entry) => {
+    if(window.confirm(`Delete ${entry.name}?`)) {
+      phonebookService
+        .remove(entry.id);
+      setPersons(persons.filter(person => person.id !== entry.id));
+    }
+  }
 
   return (
     <div>
@@ -44,7 +50,7 @@ const App = () => {
       {persons.reduce((reduced, person) => (
         (person.name.toLowerCase().search(filter.toLowerCase()) < 0) ?
         reduced : reduced.concat(person))
-        ,[]).map(person => <Entry key={person.name} person={person} />)}
+        ,[]).map(person => <Entry key={person.name} person={person} remove={() => removePerson(person)} />)}
     </div>
   );
 };
