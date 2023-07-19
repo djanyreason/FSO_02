@@ -21,12 +21,24 @@ const App = () => {
     setFilter(newFilter);
   }
 
+  const tryAddPerson = (newName, newNumber) => {
+    if(persons.reduce((check, person) => 
+                      (check || (person.name.toLowerCase() 
+                                 === newName.toLowerCase())), false))
+    {
+      return false;
+    } else {
+      setPersons(persons.concat({ name: newName, number: newNumber }));
+      return true;
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
       <Filter filterText={filter} updateFilter={updateFilter} />
       <h2>add a new</h2>
-      <PersonForm persons={persons} setPersons={setPersons} />
+      <PersonForm tryAddPerson={tryAddPerson} />
       <h2>Numbers</h2>
       {persons.reduce((reduced, person) => (
         (person.name.toLowerCase().search(filter.toLowerCase()) < 0) ?
