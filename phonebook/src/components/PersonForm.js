@@ -1,5 +1,17 @@
 import { useState } from 'react';
 
+// In an intermediate stage of this project (through final commit on 7/7/23
+// the phonebook entries were sorted alphabetically, new entries were inserted
+// so to maintain the sort, and checking for duplicate entries leveraged the
+// alphabetical sort to run more efficiently. In later exercises, the project
+// adds writes to the server; at this point in Full Stack Open we have not
+// gotten to back-end server coding, so maintaining alphabetical sort would
+// have to be done entirely on the front-end. While doing this would arguably
+// still be more efficient, it strikes me as overcomplicating front-end code
+// with what feels like back-end logic. I have commented out the code which 
+// performed the sort and relied on the sort, but left it in for demonstrative
+// purposes.
+
 const PersonForm = ( { persons, setPersons }) => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
@@ -9,6 +21,7 @@ const PersonForm = ( { persons, setPersons }) => {
   const handleFieldEntry = (updateField) => 
     (event) => {updateField(event.target.value);};
 
+  /*
   //Function that adds an entry to phonebook 
   //while maintaining alphabetical sort of names
   const addPerson = (sortedPeople) => {
@@ -41,24 +54,20 @@ const PersonForm = ( { persons, setPersons }) => {
       return validateNameEntry(mid+1, end);
     } else { return validateNameEntry(begin, mid); }
   };
+  */
 
   const handleAddClick = (event) => {
     event.preventDefault();
-
-    //I believe Full Stack Open wants us to use reduce, but I wrote a different
-    //function that leverages the alphabetical sort of person names to do the
-    //comparison in O(log(n)) instead of O(n); I left in code using reduce,
-    //commented out
     
-    /*if(persons.reduce((check, person) => 
+    if(persons.reduce((check, person) => 
                       (check || (person.name.toLowerCase() 
-                                 === newName.toLowerCase())), false)) */
-    if(validateNameEntry(0, persons.length))
+                                 === newName.toLowerCase())), false))
+    //if(validateNameEntry(0, persons.length))
     {
       alert(`${newName} is already added to phonebook`);
     } else {
-      //setPersons(persons.concat({ name: newName }));
-      setPersons(addPerson(persons));
+      setPersons(persons.concat({ name: newName, number: newNumber }));
+      //setPersons(addPerson(persons));
       setNewName('');
       setNewNumber('');
     }
