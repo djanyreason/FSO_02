@@ -14,7 +14,7 @@ const App = () => {
       .then(response => {
         setPersons(response.data);
       }
-      );
+    );
   }, []);
 
   const updateFilter = (newFilter) => {
@@ -28,7 +28,9 @@ const App = () => {
     {
       return false;
     } else {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+      axios
+        .post('http://localhost:3001/persons', {name: newName, number: newNumber})
+        .then(response => {setPersons(persons.concat(response.data));});
       return true;
     }
   };
