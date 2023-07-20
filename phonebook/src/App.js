@@ -83,6 +83,13 @@ const App = () => {
             color: 'green',
             content: `Removed ${entry.name}`
           });
+        })
+        .catch(error => {
+          handleMessage({
+            color: 'red',
+            content: `Information of ${entry.name} has already been removed from server`
+          });
+          setPersons(persons.filter(person => person.id !== entry.id));
         });
     }
     return true;
