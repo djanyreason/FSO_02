@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import phonebookService from './services/entries';
 import Entry from './components/Entry';
 import PersonForm from './components/PersonForm';
@@ -10,12 +10,23 @@ const App = () => {
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState(null);
   const [messageTimeouts, setMessageTimeouts] = useState(0);
+  const messTimRef = useRef(messageTimeouts);
+  messTimRef.current = messageTimeouts;
 
   useEffect(() => {
     phonebookService
       .getAll()
       .then(response => setPersons(response));
   }, []);
+
+  const handleMessage = (newMessage) => {
+    setMessage(newMessage);
+    setMessageTimeouts(messTimRef.current+1);
+    setTimeout(() => { 
+      if(messTimRef.current === 1) setMessage(null); 
+      setMessageTimeouts(messTimRef.current-1);
+    }, 3000);  
+  };
 
   const updateFilter = (newFilter) => {
     setFilter(newFilter);
@@ -39,15 +50,10 @@ const App = () => {
             .then(response => {
               setPersons(persons.map(
                person => person.id === response.id ? response : person));
-              setMessage({
+              handleMessage({
                 color: 'green',
                 content: `Updated number for ${newName}`
               });
-              setMessageTimeouts(messageTimeouts+1);
-              setTimeout(() => { 
-                if(messageTimeouts === 1) setMessage(null); 
-                setMessageTimeouts(messageTimeouts-1);
-              }, 3000);  
             });
           return true;
         } else {
@@ -58,15 +64,10 @@ const App = () => {
         .create({name: newName, number: newNumber})
         .then(response => {
           setPersons(persons.concat(response));
-          setMessage({
+          handleMessage({
             color: 'green',
             content: `Added ${newName}`
           });
-          setMessageTimeouts(messageTimeouts+1);
-          setTimeout(() => { 
-            if(messageTimeouts === 1) setMessage(null); 
-            setMessageTimeouts(messageTimeouts-1);
-          }, 3000);  
         });
       return true;
     }
@@ -75,14 +76,15 @@ const App = () => {
   const removePerson = (entry) => {
     if(window.confirm(`Delete ${entry.name}?`)) {
       phonebookService
-        .remove(entry.id);
-      setPersons(persons.filter(person => person.id !== entry.id));
+        .remove(entry.id)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== entry.id));
+          handleMessage({
+            color: 'green',
+            content: `Removed ${entry.name}`
+          });
+        });
     }
-    setMessage({
-      color: 'green',
-      content: `Removed ${entry.name}`
-    });
-    setTimeout(() => { setMessage(null); }, 2000);
     return true;
   }
 
