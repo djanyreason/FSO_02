@@ -9,6 +9,7 @@ const App = () => {
   const [persons, setPersons] = useState([  ]); 
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState(null);
+  const [messageTimeouts, setMessageTimeouts] = useState(0);
 
   useEffect(() => {
     phonebookService
@@ -35,14 +36,19 @@ const App = () => {
         )) {
           phonebookService
             .update(checkSameName[0].id, {name: newName, number: newNumber})
-            .then(response => setPersons(persons.map(
-              person => person.id === response.id ? response : person
-            )));
-            setMessage({
-              color: 'green',
-              content: `Updated number for ${newName}`
+            .then(response => {
+              setPersons(persons.map(
+               person => person.id === response.id ? response : person));
+              setMessage({
+                color: 'green',
+                content: `Updated number for ${newName}`
+              });
+              setMessageTimeouts(messageTimeouts+1);
+              setTimeout(() => { 
+                if(messageTimeouts === 1) setMessage(null); 
+                setMessageTimeouts(messageTimeouts-1);
+              }, 3000);  
             });
-            setTimeout(() => { setMessage(null); }, 3000);
           return true;
         } else {
           return false;
@@ -50,12 +56,18 @@ const App = () => {
     } else {
       phonebookService
         .create({name: newName, number: newNumber})
-        .then(response => setPersons(persons.concat(response)));
-      setMessage({
-        color: 'green',
-        content: `Added ${newName}`
-      });
-      setTimeout(() => { setMessage(null); }, 2000);
+        .then(response => {
+          setPersons(persons.concat(response));
+          setMessage({
+            color: 'green',
+            content: `Added ${newName}`
+          });
+          setMessageTimeouts(messageTimeouts+1);
+          setTimeout(() => { 
+            if(messageTimeouts === 1) setMessage(null); 
+            setMessageTimeouts(messageTimeouts-1);
+          }, 3000);  
+        });
       return true;
     }
   };
