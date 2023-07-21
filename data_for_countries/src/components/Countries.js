@@ -1,4 +1,5 @@
 import CountryInfo from "./CountryInfo";
+import Country from "./Country";
 
 const Countries = ( { countries } ) => {
   if(countries.length === 0) {
@@ -11,7 +12,7 @@ const Countries = ( { countries } ) => {
     );
   } else if (countries.length > 1) {
     return (
-      countries.map(country => <div key={country.name.common}>{country.name.common}</div>)
+      countries.map(country => <Country key={country.name.common} name={country.name.common} />)
     );
   } else {
     return (
